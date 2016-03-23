@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.footer {
+				bottom: 10px;
+				position: absolute;
+				width: 100%;
+			}
+			#bcid {
+				background: #0F0;
+				height: 240px;
+				width: 180px;
+				float: left;
+			}
+			#statusbox{
+				width: 40%;
+				padding-left: 1em;
+				float: left;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			// 5＋环境初始化，监听plusready事件
+			mui.plusReady(function() {
+					var scan = null;
+					var Flash = true;
+					var  statusbox = document.getElementById('statusbox');
+					function onmarked(type, result) {
+						var text = '未知: ';
+						switch (type) {
+							case plus.barcode.QR:
+								text = 'QR: ';
+								break;
+							case plus.barcode.EAN13:
+								text = 'EAN13: ';
+								break;
+							case plus.barcode.EAN8:
+								text = 'EAN8: ';
+								break;
+						}
+						alert(text + result);
+					}
+					document.getElementById('startRecognize').addEventListener('tap', function() {
+						scan = new plus.barcode.Barcode('bcid');
+						scan.onmarked = onmarked;
+						statusbox.innerText="扫描控件创建成功";
+					})
+					document.getElementById('startScan').addEventListener('tap', function() {
+						scan.start();
+						statusbox.innerText="开始扫描";
+					})
+					document.getElementById('cancelScan').addEventListener('tap', function() {
+						scan.cancel();
+						statusbox.innerText="扫描已取消";
+					})
+					document.getElementById('setFlash').addEventListener('tap', function() {
+						if(Flash){
+							scan.setFlash(true);
+							Flash=false;
+							statusbox.innerText="闪光灯已打开";
+						}else{
+							scan.setFlash(false);
+							Flash=true;
+							statusbox.innerText="闪光灯已关闭";
+						}
+					})
+
+				})
+				// 停止监听加速度变化
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">Barcode条码模块</h1>
+			<a class="mui-icon mui-icon-info mui-pull-right" href="about.html"></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='startRecognize'>创建扫描控件</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='startScan'>开始扫描</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='cancelScan'>取消扫描</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='setFlash'>开启闪光灯</button>
+				<div id="bcid"></div>
+				<div id="statusbox"></div>
+			</div>
+		</div>
+		<div class="footer" align="center">
+			<p>Based on DCloud H5+, Powered by 诺墨</p>
+		</div>
+
+	</body>
+
+</html>
