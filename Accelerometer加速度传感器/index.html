@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.footer {
+				bottom: 10px;
+				position: absolute;
+				width: 100%;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			// 5＋环境初始化，监听plusready事件
+			mui.plusReady(function() {
+					var watchid = null;
+					//获取加速度对按钮事件监听
+					document.getElementById("btn-get").addEventListener('tap', function() {
+							plus.accelerometer.getCurrentAcceleration(function(a) {
+								alert("当前手机Acceleration加速度\n  x:" + a.xAxis + "\n  y:" + a.yAxis + "\n  z:" + a.zAxis);
+							});
+						})
+						//开始监听加速度变化
+					document.getElementById("btn-start").addEventListener('tap', function() {
+						statusbox = document.getElementById('status');
+						watchid = plus.accelerometer.watchAcceleration(function(a) {
+							statusbox.innerText = "当前手机Acceleration加速度\n　x:" + a.xAxis + "\n　y:" + a.yAxis + "\n　z:" + a.zAxis;
+						}, function(e) {
+							alert("Acceleration error: " + e.message);
+						});
+						localStorage.setItem('aid', watchid);
+					});
+					document.getElementById("btn-stop").addEventListener('tap', function() {
+						var aid = localStorage.getItem('aid');
+						plus.accelerometer.clearWatch(aid);
+						wacthid = null;
+						statusbox.innerText="加速度监控已停止";
+					});
+				})
+				// 停止监听加速度变化
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">Accelerometer加速度传感器</h1>
+			<a class="mui-icon mui-icon-info mui-pull-right" href="about.html"></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<button type="button" class="mui-btn mui-btn-block" id="btn-get">获取加速度数据</button>
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-block" id="btn-start">开始监听加速度</button>
+				<button type="button" class="mui-btn mui-btn-warning mui-btn-block" id="btn-stop">停止监听加速度</button>
+
+				<br/>
+				<p id="status" style="height: 10em;"></p>
+			</div>
+		</div>
+		<div class="footer" align="center">
+		    <p>Based on DCloud H5+, Powered by 诺墨</p>
+		</div>
+
+	</body>
+
+</html>
