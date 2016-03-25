@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.footer {
+				bottom: 10px;
+				position: absolute;
+				width: 100%;
+			}
+			
+			#statusbox {
+				width: 90%;
+				padding-left: 0.5em;
+				float: left;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			// 5＋环境初始化，监听plusready事件
+			mui.plusReady(function() {
+				var statusbox = document.getElementById('statusbox');
+				document.getElementById('DevicesInfo').addEventListener('tap', function() {
+					var str = "",
+						i;
+					str += "设备型号：" + plus.device.model + "\n";
+					str += "设备厂商：" + plus.device.vendor + "\n";
+					str += "IMEI：" + plus.device.imei + "\n";
+					str += "UUID: " + plus.device.uuid + "\n";
+					str += "IMSI：";
+					for (i = 0; i < plus.device.imsi.length; i++) {
+						str += plus.device.imsi[i];
+					}
+					str += "\n";
+					str += "屏幕分辨率：" + plus.screen.resolutionWidth * plus.screen.scale + " x " + plus.screen.resolutionHeight * plus.screen.scale + "\n";
+					str += "DPI：" + plus.screen.dpiX + " x " + plus.screen.dpiY;
+					statusbox.innerText = str;
+				})
+				document.getElementById('SysINfo').addEventListener('tap', function() {
+					var str = "";
+					str += "名称：" + plus.os.name + "\n";
+					str += "版本：" + plus.os.version + "\n";
+					str += "语言：" + plus.os.language + "\n";
+					str += "厂商：" + plus.os.vendor + "\n";
+					str += "网络类型：";
+					var types = {};
+					types[plus.networkinfo.CONNECTION_UNKNOW] = "未知";
+					types[plus.networkinfo.CONNECTION_NONE] = "未连接网络";
+					types[plus.networkinfo.CONNECTION_ETHERNET] = "有线网络";
+					types[plus.networkinfo.CONNECTION_WIFI] = "WiFi网络";
+					types[plus.networkinfo.CONNECTION_CELL2G] = "2G蜂窝网络";
+					types[plus.networkinfo.CONNECTION_CELL3G] = "3G蜂窝网络";
+					types[plus.networkinfo.CONNECTION_CELL4G] = "4G蜂窝网络";
+					str += types[plus.networkinfo.getCurrentType()];
+					statusbox.innerText = str;
+				})
+				document.getElementById('Vibrate').addEventListener('tap', function() {
+					var str = "";
+					switch (plus.os.name) {
+						case "iOS":
+							if (plus.device.model.indexOf("iPhone") >= 0) {
+								plus.device.vibrate();
+								str += "设备振动中...";
+							} else {
+								str += "此设备不支持振动";
+							}
+							break;
+						default:
+							plus.device.vibrate();
+							str += "设备振动中...";
+							break;
+					}
+					statusbox.innerText = str;
+				})
+				document.getElementById('Beep').addEventListener('tap', function() {
+					var str = "";
+					switch (plus.os.name) {
+						case "iOS":
+							if (plus.device.model.indexOf("iPhone") >= 0) {
+								plus.device.beep();
+								str += "设备蜂鸣中...";
+							} else {
+								str += "此设备不支持蜂鸣";
+							}
+							break;
+						default:
+							plus.device.beep();
+							str += "设备蜂鸣中...";
+							break;
+					}
+					statusbox.innerText = str;
+				})
+				document.getElementById('dial').addEventListener('tap', function() {
+					plus.device.dial("10086", false);
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">Devices 设备信息模块</h1>
+			<a class="mui-icon mui-icon-info mui-pull-right" href="about.html"></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='DevicesInfo'>一键获取设备信息</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='SysINfo'>一键获取系统</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='Beep'>设备蜂鸣</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='Vibrate'>震动</button>
+				<button class='mui-btn mui-btn-block mui-btn-blue' id='dial'>直接打电话</button>
+				<div id="statusbox">Device可获取手机设备相关信息，包括硬件、软件、网络等信息</div>
+			</div>
+		</div>
+		<div class="footer" align="center">
+			<p>Based on DCloud H5+, Powered by 诺墨</p>
+		</div>
+
+	</body>
+
+</html>
